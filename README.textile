@@ -1,0 +1,32 @@
+h1. Clever Algorithms & JRubyArt Playground
+
+
+Learning about evolutionary algorithms and visualising them in Processing, via JRubyArt.
+
+h2. Install
+
+Check the JRubyArt docs for latest install instructions. My merry dance was something like installing Java 8, JRuby then JRubyArt and adding some paths like so:
+
+bc.
+# JAVA
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+export PATH=$PATH:$JAVA_HOME/bin
+
+bc.
+# JRUBY
+export PATH=/data/development/vendor/jruby-9.0.3.0/bin:$PATH
+
+h2. Run
+
+Once installed you can do something like this to fire up Processing and get a REPL.
+
+bc.
+k9 watch genetic-oo.rb
+
+h2. Thanks
+
+- "Clever Algorithms":http://www.cleveralgorithms.com
+- "JRubyArt":https://github.com/ruby-processing/JRubyArt/wiki
+- "Processing":https://processing.org
+
+
