@@ -1,19 +1,22 @@
 attr_reader :genetic
 attr_reader :pixel
+attr_reader :num_bits
+
+CANVAS = 400
 
 def settings
-  size 640, 640
+  size(CANVAS, CANVAS)
 end
 
 def setup
-  puts "setup"
+  puts "setup "
   sketch_title 'Genetic OO'
-  # frame_rate 10
+  frame_rate 20
   background(255)
 
-  @pixel = 10
+  @pixel = 20
+  @num_bits = CANVAS/@pixel * CANVAS/@pixel
 
-  num_bits = 64 * 64
   p_crossover = 0.98
   p_mutation = 1.0/num_bits
 
@@ -24,7 +27,7 @@ def setup
 end
 
 def draw
-  # puts "draw: #{frame_count}"
+  # puts "draw: #{frame_count} "
   gen = genetic.next_gen()
 
   xpos = 0
@@ -34,10 +37,14 @@ def draw
   gen.fetch(:bitstring).each_char do |bit|
     if bit.to_i == 0
       fill(255)
+      # stroke(255)
+      # line(xpos+genetic.generation*2, ypos, xpos+pixel, ypos+pixel)
       rect(xpos, ypos, pixel, pixel)
     else
       fill(0)
+      stroke(0)
       rect(xpos, ypos, pixel, pixel)
+      # line(xpos+genetic.generation*2, ypos, xpos+pixel, ypos+pixel)
     end
 
     if xpos < width
@@ -47,6 +54,8 @@ def draw
       ypos += pixel
     end
   end
+
+  frame_rate(5) if gen.fetch(:fitness) == num_bits
 
 end
 
@@ -90,8 +99,8 @@ class Genetic
     children.sort! { |x, y| y[:fitness] <=> x[:fitness] }
     best = children.first if children.first[:fitness] >= best[:fitness]
     @population = children
-    # puts " > gen #{generation}, best: #{best[:fitness]}, #{best[:bitstring]}"
-    puts " > gen #{generation}, best: #{best[:fitness]}"
+    puts " > gen #{generation}, best: #{best[:fitness]}, #{best[:bitstring]}"
+    # puts " > gen #{generation}, best: #{best[:fitness]}"
 
     @generation += 1
     return best
