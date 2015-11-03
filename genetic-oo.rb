@@ -2,7 +2,7 @@ attr_reader :genetic
 attr_reader :pixel
 attr_reader :num_bits
 
-CANVAS = 400
+CANVAS = 800
 
 def settings
   size(CANVAS, CANVAS)
@@ -11,7 +11,7 @@ end
 def setup
   puts "setup "
   sketch_title 'Genetic OO'
-  frame_rate 20
+  # frame_rate 5
   background(255)
 
   @pixel = 20
@@ -35,16 +35,22 @@ def draw
 
   # draw one row
   gen.fetch(:bitstring).each_char do |bit|
+    # Off / White + grey border
     if bit.to_i == 0
-      fill(255)
-      # stroke(255)
-      # line(xpos+genetic.generation*2, ypos, xpos+pixel, ypos+pixel)
-      rect(xpos, ypos, pixel, pixel)
+      fill(100)
+      stroke(200)
+      # line(xpos+ypos, ypos, xpos+pixel, ypos+pixel)
+      rect(xpos, ypos, pixel*2, pixel*2)
     else
-      fill(0)
-      stroke(0)
-      rect(xpos, ypos, pixel, pixel)
-      # line(xpos+genetic.generation*2, ypos, xpos+pixel, ypos+pixel)
+      # On / Grey + White border
+      # Trends this way
+      fill(255)
+      stroke(200)
+      ellipseMode(CORNER)
+      # ellipse(xpos, ypos, pixel, pixel)
+      line((xpos-pixel)+genetic.generation*2, ypos, xpos+pixel, ypos+pixel)
+      # line(xpos, ypos, xpos+pixel+(genetic.generation*0.5), ypos+pixel+(genetic.generation*0.1))
+      # rect(xpos, ypos, pixel*2, pixel*2)
     end
 
     if xpos < width
@@ -55,7 +61,7 @@ def draw
     end
   end
 
-  frame_rate(5) if gen.fetch(:fitness) == num_bits
+  # frame_rate(5) if gen.fetch(:fitness) == num_bits
 
 end
 
