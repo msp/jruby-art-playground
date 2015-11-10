@@ -84,7 +84,16 @@ def draw
     end
   end
 
+  if @recording
+    save_frame("#{File.expand_path(File.dirname(__FILE__))}/output/capture-######.png")
+  end
+
   # frame_rate(15) if gen.fetch(:fitness) == num_bits
   frame_rate(15) if genetic.generation == 1000
+  @recording = false
+end
 
+def key_pressed
+  return unless key == 'S' || key == 's'
+  @recording = true
 end
