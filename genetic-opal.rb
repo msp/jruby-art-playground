@@ -113,16 +113,16 @@ class Genetic
 
 end
 
-max = 99
-pixel = 50
-num_bits = 300/pixel * 300/pixel
-
-p_crossover = 0.98
-p_mutation = 1.0/num_bits*1.5
-
-genetic =  Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation)
-
-(0..max).each do
-  genetic.next_gen()
-end
+# max = 99
+# pixel = 50
+# num_bits = 300/pixel * 300/pixel
+#
+# p_crossover = 0.98
+# p_mutation = 1.0/num_bits*1.5
+#
+# genetic =  Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation)
+#
+# (0..max).each do
+#   genetic.next_gen()
+# end
 
