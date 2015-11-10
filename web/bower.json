@@ -1,0 +1,15 @@
+{
+  "name": "web",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "modernizr": "~2.8.3",
+    "Processing.js": "~1.4.16",
+    "opal": "~0.8.0",
+    "p5js": "~0.4.18"
+  },
+  "devDependencies": {
+    "chai": "~3.4.1",
+    "mocha": "~2.3.3"
+  }
+}
