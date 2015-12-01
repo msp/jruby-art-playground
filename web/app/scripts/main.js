@@ -1,57 +1,84 @@
-console.log('\'Allo \'Allo!'); // eslint-disable-line no-console
+// eslint-disable-line no-console
 
 var genetic;
-var pixel = 30;
+var pixel = 100;
+var gen;
+var canvasW = 600;
+
+var stats = new Stats();
+stats.setMode( 0 ); // 0 FPS, 1 MS
+
+// align top-left
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.right = '0px';
+stats.domElement.style.bottom = '0px';
+stats.domElement.style.zIndex = '999999';
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.body.appendChild( stats.domElement );
+});
+
 
 function setup() {
-
-  createCanvas(600, 600);
+  var canvas = createCanvas(canvasW, canvasW);
+  canvas.parent('container');
   background(255);
 
-  var num_bits = width/pixel * height/pixel;
+  var num_bits = width / pixel * height / pixel;
   var p_crossover = 0.98;
+  var p_mutation = 1.0 / num_bits * 1.5;
 
-  //# control
-  var p_mutation = 1.0/num_bits;
+  genetic = Opal.Genetic.$new(Opal.hash2(["_num_bits", "_p_crossover", "_p_mutation"],
+    {"_num_bits": num_bits, "_p_crossover": p_crossover, "_p_mutation": p_mutation}));
 
-  //@genetic =  Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation)
-  genetic = Opal.Genetic.$new(Opal.hash2(["_num_bits", "_p_crossover", "_p_mutation"], {"_num_bits": num_bits, "_p_crossover": p_crossover, "_p_mutation": p_mutation}));
+  //noLoop();
 }
 
 function draw() {
-  ellipse(50, 50, 80, 80);
-
-  var gen = genetic.$next_gen();
+  stats.begin();
 
   var xpos = 0;
   var ypos = 0;
 
-  //# draw one row
-  //gen.$fetch('bitstring').$each_char do |bit|
+  gen = genetic.$next_gen();
 
-  //# Off / White + grey border
-  var bit = 0
-  if (bit == 0) {
-    fill(255);
-    //# control
-    rect(xpos, ypos, pixel, pixel)
-  } else {
-    //# On / Grey + White border
-    //    # Trends this way
+  //draw one row
+  var bitstring = gen.$fetch('bitstring');
 
-    fill(50);
+  for (var i = 0; i < bitstring.length; i++) {
+    var bit = bitstring.charAt(i);
 
-    //no_stroke();
-    //# control
-    rect(xpos, ypos, pixel, pixel);
+    //Off / White + grey border
+    if (bit == '0') {
+      fill(255);
+      noStroke();
+      //stroke(200);
+
+      //control
+      //rect(xpos, ypos, pixel, pixel)
+
+      rect(xpos, ypos, random(pixel*2), random(pixel*2), random(7), random(7), random(7), random(7))
+    } else {
+      //On / Grey + White border
+      //Trends this way
+      fill(50, 1);
+      //noStroke();
+
+      //control
+      //rect(xpos, ypos, pixel, pixel);
+
+      rect(xpos, ypos, pixel*2, pixel*2);
+    }
+
+    if (xpos < width) {
+      xpos += pixel;
+    } else {
+      xpos = 0;
+      ypos += pixel;
+    }
   }
 
-  if (xpos < width) {
-    xpos += pixel;
-  } else {
-    xpos = 0;
-    ypos += pixel;
-  }
+  stats.end();
 }
 
 
