@@ -59,7 +59,7 @@ class Genetic
       children.sort! { |x, y| y[:fitness] <=> x[:fitness] }
       best = children.first if children.first[:fitness] >= best[:fitness]
       population = children
-      puts " > gen #{gen}, best: #{best[:fitness]}, #{best[:bitstring]}"
+      # puts " > gen #{gen}, best: #{best[:fitness]}, #{best[:bitstring]}"
       break if best[:fitness] == num_bits
     end
     return best

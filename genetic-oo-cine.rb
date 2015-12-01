@@ -17,49 +17,48 @@ def setup
   # frame_rate 5
   background(255)
 
-  @pixel = 80
+  @pixel = 100
   @num_bits = width/@pixel * height/@pixel
 
   p_crossover = 0.98
   p_mutation = 1.0/num_bits*1.5
 
-  @genetic = Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation)
+  @genetic = Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation, _pop_size: 100)
+
 end
 
 def draw
-  gen = genetic.next_gen()
-
+  # puts "MSPX pixel: #{pixel}"
   xpos = 0
   ypos = 0
 
-  # draw one row
+  background(255) if @cls
+
+  # quick
+  gen = genetic.next_gen()
+
+  # slow
   gen.fetch(:bitstring).each_char do |bit|
     # Off / White + grey border
     if bit.to_i == 0
       fill(255)
-
-      stroke(200, random(100))
-      # stroke(0)
-
+      # stroke(200, random(100))
       # line(xpos+ypos, ypos, xpos+pixe, ypos+pixel)
-      # ellipseMode(CENTER)
-
-      # rect(xpos, ypos, random(pixel), random(pixel), random(7), random(7), random(7), random(7))
-      drawQuadVertexRect(xpos, ypos)
+      ellipseMode(CENTER)
+      rect(xpos, ypos, random(pixel*2), random(pixel*2), random(7), random(7), random(7), random(7))
     else
       # On / Grey + White border
       # Trends this way
       fill(50, 1)
-      stroke(200)
-      # no_stroke()
+      # stroke(200)
+      no_stroke()
       # ellipseMode(CORNER)
       # ellipse(xpos, ypos, pixel, pixel)
       # line(xpos, ypos+pixel/2, xpos+pixel, ypos)
       # line(xpos, ypos, xpos+pixel+(genetic.generation*0.5), ypos+pixel+(genetic.generation*0.1))
 
-      rect(xpos, ypos, pixel, pixel)
+      rect(xpos, ypos, pixel*2, pixel*2)
     end
-
 
     if xpos < width
       xpos += pixel
@@ -67,13 +66,6 @@ def draw
       xpos = 0
       ypos += pixel
     end
-
-    # to test a custom shape
-    # xpos = pixel*2
-    # ypos = pixel*2
-    # stroke(0)
-    # drawQuadVertexRect(xpos, ypos)
-
   end
 
   if @recording
@@ -83,15 +75,16 @@ def draw
   # frame_rate(15) if gen.fetch(:fitness) == num_bits
   frame_rate(15) if genetic.generation == 1000
   @recording = false
+  @cls = false
 end
 
 def drawQuadVertexRect(xpos, ypos)
   r_amt = 0
   br_amt = 0
-  # quad_height = random(pixel)
-  # quad_width = random(pixel)
-  quad_height = pixel
-  quad_width = pixel
+  quad_height = random(pixel/2, pixel)
+  quad_width = random(pixel/2, pixel)
+  # quad_height = pixel
+  # quad_width = pixel
 
   x1 = xpos+random(r_amt)
   y1 = ypos+random(r_amt)
@@ -116,7 +109,13 @@ def drawQuadVertexRect(xpos, ypos)
 end
 
 def key_pressed
+  puts "MSPX key: #{key}"
   @recording = true if key == 'S' || key == 's'
   no_loop if key == 'p'
   loop if key == 'r'
+  @shape_mode = 'rect' if key == 'w'
+  @shape_mode = 'quad' if key == 'q'
+  @pixel += 1 if key == '='
+  @pixel -= 1 if key == '-'
+  @cls = true if key == 'c'
 end
