@@ -4,11 +4,12 @@ attr_reader :genetic
 attr_reader :pixel
 attr_reader :num_bits
 
-CANVAS = 600
+CANVAS = 1000
 
 def settings
-  # size(CANVAS, CANVAS)
-  fullScreen(P3D, 1)
+  size(CANVAS, CANVAS)
+  # fullScreen(P3D, 0)
+  pixelDensity(displayDensity())
 end
 
 def setup

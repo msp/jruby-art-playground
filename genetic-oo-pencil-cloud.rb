@@ -10,8 +10,7 @@ CANVAS = 1000
 def settings
   size(CANVAS, CANVAS)
   # fullScreen(P3D, 0)
-
-  # check pixel density?
+  pixelDensity(displayDensity())
 end
 
 def setup

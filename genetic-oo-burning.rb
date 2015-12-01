@@ -9,6 +9,7 @@ CANVAS = 600
 def settings
   size(CANVAS, CANVAS)
   #  fullScreen(P3D, 1)
+  pixelDensity(displayDensity())
 end
 
 def setup
