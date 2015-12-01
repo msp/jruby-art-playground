@@ -20,9 +20,19 @@ Once installed you can do something like this to fire up Processing and get a RE
 
 bc. k9 watch genetic-oo.rb
 
+h2. Web
+
+The end game is to get this on the web. I'm working in JRubyArt to prototype, then transpiling the algorithm to Javascript via Opal and rendering in p5js. You'll be able to run up a web server if you have Node/Bower/Grunt installed like so:
+
+bc. npm install
+bc. grunt serve
+
+The webapp was bootstrapped via Yeoman.
+
 h2. Thanks
 
 - "Clever Algorithms":http://www.cleveralgorithms.com
 - "JRubyArt":https://github.com/ruby-processing/JRubyArt/wiki
 - "Processing":https://processing.org
-
+- "p5js":http://p5js.org
+- "Opal":http://opalrb.org
