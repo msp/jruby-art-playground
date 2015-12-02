@@ -18,14 +18,16 @@ h2. Run
 
 Once installed you can do something like this to fire up Processing and get a REPL.
 
-bc. k9 watch genetic-oo.rb
+bc. $ k9 watch genetic-oo.rb
 
 h2. Web
 
 The end game is to get this on the web. I'm working in JRubyArt to prototype, then transpiling the algorithm to Javascript via Opal and rendering in p5js. You'll be able to run up a web server if you have Node/Bower/Grunt installed like so:
 
-bc. npm install
-bc. grunt serve
+bc. $ npm install
+$ grunt serve
+
+Work in progress for the web is "here":http://development.infra12007.divshot.io
 
 The webapp was bootstrapped via Yeoman.
 
