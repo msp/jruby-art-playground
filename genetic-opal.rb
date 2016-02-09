@@ -41,7 +41,7 @@ class Genetic
     children.sort! { |x, y| y[:fitness] <=> x[:fitness] }
     best = children.first if children.first[:fitness] >= best[:fitness]
     @population = children
-    puts " > gen #{generation}, best: #{best[:fitness]}, #{best[:bitstring]}"
+    # puts " > gen #{generation}, best: #{best[:fitness]}, #{best[:bitstring]}"
     # puts " > gen #{generation}, best: #{best[:fitness]}"
 
     @generation += 1

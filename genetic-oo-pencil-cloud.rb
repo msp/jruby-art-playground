@@ -1,3 +1,7 @@
+load_libraries 'pdf'
+include_package 'processing.pdf'
+
+
 require 'benchmark'
 require_relative 'genetic-opal'
 
@@ -6,9 +10,15 @@ attr_reader :pixel
 attr_reader :num_bits
 
 CANVAS = 1000
+MAX_GENS = 220
+# get the animation right, the mulitply the canvas by SCALER
+# and call scale(SCALER) in draw(), copying to an off screen buffer
+# SCALER = 300/72
+SCALER = 3
 
 def settings
-  size(CANVAS, CANVAS)
+  # size(CANVAS*SCALER, CANVAS*SCALER, P3D)
+  size(CANVAS*SCALER, CANVAS*SCALER, PDF, "#{File.expand_path(File.dirname(__FILE__))}/output/capture-hires-#{Time.now.to_i}.pdf")
   # fullScreen(P3D, 0)
   pixelDensity(displayDensity())
 end
@@ -20,18 +30,17 @@ def setup
   background(255)
   @shape_mode = 'quad'
 
-  @pixel = 40
+  @pixel = 80
   @num_bits = width/@pixel * height/@pixel
 
   p_crossover = 0.98
   p_mutation = 1.0/num_bits*1.5
 
   @genetic = Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation, _pop_size: 100)
-
 end
 
 def draw
-  # puts "MSPX pixel: #{pixel}"
+  puts "draw #{genetic.generation} w #{width} h #{height}"
   xpos = 0
   ypos = 0
 
@@ -96,7 +105,7 @@ def draw
 
   # puts "MSPX frame_rate: #{frame_rate}"
   # frame_rate(15) if gen.fetch(:fitness) == num_bits
-  # frame_rate(15) if genetic.generation == 1000
+  exit if genetic.generation == MAX_GENS
   @recording = false
   @cls = false
 end
@@ -133,7 +142,12 @@ end
 
 def key_pressed
   puts "MSPX key: #{key}"
-  @recording = true if key == 'S' || key == 's'
+
+  if (key == 'S' || key == 's')
+    @recording = true
+    # capture_hi_res_using_buffer
+  end
+
   no_loop if key == 'p'
   loop if key == 'r'
   @shape_mode = 'rect' if key == 'w'
@@ -141,4 +155,20 @@ def key_pressed
   @pixel += 1 if key == '='
   @pixel -= 1 if key == '-'
   @cls = true if key == 'c'
+end
+
+def capture_hi_res_using_buffer
+  @recording = false
+  pg = create_graphics((width*SCALER).to_i, (height*SCALER).to_i, P3D)
+  # pg.pixelDensity(displayDensity())
+  pg.begin_draw()
+  pg.load_pixels()
+  # puts "MSPX pg: #{pg.pixels.length}"
+  # puts "MSPX self.g.pixels: #{self.g.pixels.length}"
+
+  pg.pixels = self.g.pixels
+
+  pg.update_pixels()
+  pg.save("#{File.expand_path(File.dirname(__FILE__))}/output/capture-hires-#{Time.now.to_i}.png")
+  pg.end_draw()
 end
