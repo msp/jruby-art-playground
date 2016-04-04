@@ -1,4 +1,4 @@
-require_relative "pso-oo.rb"
+require_relative "../ruby/pso-oo.rb"
 
 attr_reader :algorithm
 attr_reader :pixel

@@ -1,4 +1,4 @@
-require_relative "genetic-opal"
+require_relative "../ruby/genetic-opal"
 
 attr_reader :genetic
 attr_reader :pixel

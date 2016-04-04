@@ -1,16 +1,16 @@
-require 'benchmark'
-require_relative 'genetic-opal'
+require_relative "../ruby/genetic-opal"
 
 attr_reader :genetic
 attr_reader :pixel
 attr_reader :num_bits
 
-CANVAS = 1000
+CANVAS = 601
+MAX = 10000
 
 def settings
-  size(CANVAS, CANVAS)
-  # fullScreen(P3D, 0)
-  pixelDensity(displayDensity())
+  # size(CANVAS, CANVAS)
+  fullScreen(P3D, 1)
+  # pixelDensity(displayDensity())
 end
 
 def setup
@@ -20,59 +20,62 @@ def setup
   background(255)
   @shape_mode = 'quad'
 
-  @pixel = 40
+  @pixel = 100
   @num_bits = width/@pixel * height/@pixel
 
   p_crossover = 0.98
-  p_mutation = 1.0/num_bits*1.5
+  p_mutation = 1.0/num_bits
 
-  @genetic = Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation, _pop_size: 100)
-
+  @genetic =  Genetic.new(_num_bits: num_bits, _p_crossover: p_crossover, _p_mutation: p_mutation)
+  # best = genetic.search()
+  # puts "Xdone! Solution: f=#{best[:fitness]}, s=#{best[:bitstring]}"
+  # noLoop()
 end
 
 def draw
-  # puts "MSPX pixel: #{pixel}"
+  # puts "draw: #{frame_count} "
+  gen = genetic.next_gen()
+
   xpos = 0
   ypos = 0
 
   background(255) if @cls
 
-  # quick
-  gen = genetic.next_gen()
-
-  # slow
+  # draw one row
   gen.fetch(:bitstring).each_char do |bit|
     # Off / White + grey border
     if bit.to_i == 0
-      # fill(150, 100)
+      # fill(255)
+      # stroke(200, random(100))
+      stroke(200)
+      # line(xpos+ypos, ypos, xpos+pixe, ypos+pixel)
+      # ellipseMode(CENTER)
+      # rect(xpos, ypos, random(pixel*2), random(pixel*2), random(7), random(7), random(7), random(7))
+      translate(xpos, ypos, 0);
+      rotateY(0.5);
+      noFill();
+      box(pixel*2);
 
-      stroke(55, random(100))
-      # stroke(0)
-
-      # line(xpos+ypos, ypos, xpos+pixel, ypos+pixel)
-
-      if @shape_mode == 'rect'
-        rect(xpos+random(51), ypos+random(51), random(pixel), random(pixel), random(7), random(7), random(7), random(7))
-      elsif @shape_mode == 'quad'
-        drawQuadVertexRect(xpos+random(51), ypos+random(51))
-      end
+      # if @shape_mode == 'rect'
+      #   box(pixel*2);
+      #   # rect(xpos+random(51), ypos+random(51), random(pixel), random(pixel), random(7), random(7), random(7), random(7))
+      # elsif @shape_mode == 'quad'
+      #   drawQuadVertexRect(xpos+random(51), ypos+random(51))
+      # end
     else
       # On / Grey + White border
       # Trends this way
-      fill(255,1)
-      stroke(255)
+      fill(50, 1)
+      stroke(20)
       # no_stroke()
       # ellipseMode(CORNER)
       # ellipse(xpos, ypos, pixel, pixel)
       # line(xpos, ypos+pixel/2, xpos+pixel, ypos)
       # line(xpos, ypos, xpos+pixel+(genetic.generation*0.5), ypos+pixel+(genetic.generation*0.1))
 
-      # rect(xpos, ypos, pixel, pixel)
-      if @shape_mode == 'rect'
-        rect(xpos+random(51), ypos+random(51), random(pixel), random(pixel), random(7), random(7), random(7), random(7))
-      elsif @shape_mode == 'quad'
-        drawQuadVertexRect(xpos+random(51), ypos+random(51))
-      end
+      # translate(xpos, ypos, 0);
+      # rotateY(0.5);
+      #  box(pixel);
     end
 
     if xpos < width
@@ -81,33 +84,25 @@ def draw
       xpos = 0
       ypos += pixel
     end
-
-    # to test a custom shape
-    # xpos = pixel*2
-    # ypos = pixel*2
-    # stroke(0)
-    # drawQuadVertexRect(xpos, ypos)
-
   end
 
   if @recording
     save_frame("#{File.expand_path(File.dirname(__FILE__))}/output/capture-######.png")
   end
 
-  # puts "MSPX frame_rate: #{frame_rate}"
   # frame_rate(15) if gen.fetch(:fitness) == num_bits
   # frame_rate(15) if genetic.generation == 1000
+  # no_loop if genetic.generation == MAX
   @recording = false
-  @cls = false
 end
 
 def drawQuadVertexRect(xpos, ypos)
   r_amt = 0
   br_amt = 0
-  quad_height = random(pixel/2, pixel)
-  quad_width = random(pixel/2, pixel)
-  # quad_height = pixel
-  # quad_width = pixel
+  # quad_height = random(pixel/2, pixel)
+  # quad_width = random(pixel/2, pixel)
+  quad_height = pixel
+  quad_width = pixel
 
   x1 = xpos+random(r_amt)
   y1 = ypos+random(r_amt)
