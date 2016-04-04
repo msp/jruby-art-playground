@@ -32,9 +32,9 @@ end
 
 def point_mutation(bitstring, rate=1.0/bitstring.size)
   child = ""
-  bitstring.size.times do |i|
-    bit = bitstring[i].chr
-    child << ((rand()<rate) ? ((bit=='1') ? "0" : "1") : bit)
+   bitstring.size.times do |i|
+     bit = bitstring[i].chr
+     child << ((rand()<rate) ? ((bit=='1') ? "0" : "1") : bit)
   end
   return child
 end
@@ -156,7 +156,7 @@ def weighted_sum(x)
   return x[:objectives].inject(0.0) {|sum, x| sum+x}
 end
 
-def search(search_space, max_gens, pop_size, p_cross, bits_per_param=16)
+def search(search_space, max_gens, pop_size, p_cross, bits_per_param=48)
   pop = Array.new(pop_size) do |i|
     {:bitstring=>random_bitstring(search_space.size*bits_per_param)}
   end
@@ -167,7 +167,8 @@ def search(search_space, max_gens, pop_size, p_cross, bits_per_param=16)
   end
   children = reproduce(selected, pop_size, p_cross)
   calculate_objectives(children, search_space, bits_per_param)
-  max_gens.times do |gen|
+  max_gens.times.with_index do |gen, i|
+    puts "[#{i}] #{pop.length} || #{children.length}"
     union = pop + children
     fronts = fast_nondominated_sort(union)
     parents = select_parents(fronts, pop_size)
@@ -180,7 +181,7 @@ def search(search_space, max_gens, pop_size, p_cross, bits_per_param=16)
     best = parents.sort!{|x,y| weighted_sum(x)<=>weighted_sum(y)}.first
     best_s = "[x=#{best[:vector]}, objs=#{best[:objectives].join(', ')}]"
     # puts " > gen=#{gen+1}, fronts=#{fronts.size}, best=#{best_s}"
-    puts "#{pop[gen][:bitstring]}"
+    # puts "#{pop[gen][:bitstring]}"
   end
   union = pop + children
   fronts = fast_nondominated_sort(union)
@@ -193,8 +194,8 @@ if __FILE__ == $0
   problem_size = 1
   search_space = Array.new(problem_size) {|i| [-10, 10]}
   # algorithm configuration
-  max_gens = 500
-  pop_size = 100
+  max_gens = 150
+  pop_size = 150
   p_cross = 0.98
   # execute the algorithm
   pop = search(search_space, max_gens, pop_size, p_cross)
